@@ -19,8 +19,18 @@ async function fetchPosts(params) {
       },
     },
   );
-
+  
   return posts;
 }
+// axios.get(`https://jsonplaceholder.typicode.com/albums/${post.id}/photos`);
 
-module.exports = { fetchPosts };
+async function fetchPostImages(post) {
+  // const { start = 0, limit = 10 } = params || {};
+  const { data: posts } = await axios.get(`https://jsonplaceholder.typicode.com/albums/${post.id}/photos`);
+  const images = posts.map((data)=>{
+           return {url : data.url}
+  })
+  return images;
+}
+
+module.exports = { fetchPosts, fetchPostImages };

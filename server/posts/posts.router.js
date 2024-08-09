@@ -1,29 +1,30 @@
 const express = require('express');
-const { fetchPosts } = require('./posts.service');
+const { fetchPosts,fetchPostImages } = require('./posts.service');
 const { fetchUserById } = require('../users/users.service');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const posts = await fetchPosts();
-
-  const postsWithImages = posts.reduce((acc, post) => {
-    // TODO use this route to fetch photos for each post
-    // axios.get(`https://jsonplaceholder.typicode.com/albums/${post.id}/photos`);
+  const start = req.query.start;
+  const limit = req.query.limit;
+  const params = {start, limit}
+  const posts = await fetchPosts(params);
+  
+  const postsWithImages = await posts.reduce(async (acc, post) => {
+ // TODO use this route to fetch photos for each post
+    
+    const postImages = await fetchPostImages(post)
+    const newacc = await acc;
     return [
-      ...acc,
+      ...newacc,
       {
         ...post,
-        images: [
-          { url: 'https://picsum.photos/200/300' },
-          { url: 'https://picsum.photos/200/300' },
-          { url: 'https://picsum.photos/200/300' },
-        ],
+        images: postImages,
       },
     ];
   }, []);
 
-  res.json(postsWithImages);
+  res.json({data : postsWithImages,metaData : {page : ((Number(start)+Number(limit))/Number(limit)), totalPages : limit===5 ? 20 : 10}});
 });
 
 module.exports = router;

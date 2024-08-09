@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import styled from '@emotion/styled';
+import Credit from './Credit';
 
 const PostContainer = styled.div(() => ({
   width: '300px',
   margin: '10px',
   border: '1px solid #ccc',
+  position : 'relative',
   borderRadius: '5px',
   overflow: 'hidden',
 }));
@@ -56,10 +58,14 @@ const Button = styled.button(() => ({
 }));
 
 const PrevButton = styled(Button)`
+  position : absolute;
+  top : 50%;
   left: 10px;
 `;
 
 const NextButton = styled(Button)`
+   position : absolute;
+  top : 50%;
   right: 10px;
 `;
 
@@ -69,16 +75,17 @@ const Post = ({ post }) => {
   const handleNextClick = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({
-        left: 50,
+        left: carouselRef.current.clientWidth,
         behavior: 'smooth',
       });
     }
   };
 
   const handlePrevClick = () => {
+    console.log(carouselRef.current) 
     if (carouselRef.current) {
       carouselRef.current.scrollBy({
-        left: -70,
+        left: -carouselRef.current.clientWidth,
         behavior: 'smooth',
       });
     }
@@ -86,7 +93,9 @@ const Post = ({ post }) => {
 
   return (
     <PostContainer>
+      
       <CarouselContainer>
+      <Credit post={post}/>
         <Carousel ref={carouselRef}>
           {post.images.map((image, index) => (
             <CarouselItem key={index}>
