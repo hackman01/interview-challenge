@@ -1,9 +1,16 @@
-import React from 'react';
+import { React, createContext, useEffect, useState } from 'react';
+import { ContextProvider } from '../context/contextProvider'
 
-const App = ({ Component, pageProps }) => (
-  <React.Fragment>
+const App = ({ Component, pageProps }) => {
+
+
+
+   return(
+  
+    <ContextProvider>
     <Component {...pageProps} />
-  </React.Fragment>
-);
+    </ContextProvider>
+   )
+};
 
 export default App;
